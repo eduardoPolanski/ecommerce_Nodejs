@@ -1,0 +1,36 @@
+const { Router } = require('express')
+
+const UserController = require('../controllers/UserController')
+const SessionController = require('../controllers/Login')
+const ProductController = require('../controllers/ProductController')
+const CartController = require('../controllers/CartController')
+const {authenticate} = require('../middlewares')
+
+const routes = Router()
+
+routes.get('/', (req, res) => {
+    res.send('Olá mundo')
+})
+
+routes.post('/users', UserController.createUser)
+routes.get('/users', UserController.getUsers)
+
+routes.get('/users/:user_id', UserController.getUserByid)
+
+routes.post('/sessions', SessionController.createSession)
+
+routes.post('/products/:user_id', authenticate, ProductController.createProduct)
+routes.get('/:user_id/products', ProductController.getUserProducts)
+routes.patch('/products/:user_id/:product_id', authenticate, ProductController.updateProduct)
+routes.delete('/products/:user_id/:product_id', ProductController.deleteProduct)
+
+
+routes.get('/products', ProductController.getProducts)
+routes.get('/products/:product_id', ProductController.getProductById)
+
+routes.post('/cart/:user_id', authenticate, CartController.createCart)
+routes.get('/cart/:user_id', authenticate, CartController.getUserCarts)
+routes.get('/cart/:user_id/:cart_id', authenticate, CartController.getCart)
+
+
+module.exports = routes
